@@ -1,0 +1,62 @@
+{
+    "totalReach": 456000,
+    "avgEngagement": 8.2,
+    "conversions": 1255,
+    "roi": 340,
+    "timeline": [
+        {
+            "name": "Jan",
+            "reach": 45000,
+            "engagement": 3200,
+            "conversions": 120
+        },
+        {
+            "name": "Feb",
+            "reach": 52000,
+            "engagement": 3800,
+            "conversions": 145
+        },
+        {
+            "name": "Mar",
+            "reach": 61000,
+            "engagement": 4500,
+            "conversions": 180
+        },
+        {
+            "name": "Apr",
+            "reach": 78000,
+            "engagement": 5200,
+            "conversions": 210
+        },
+        {
+            "name": "May",
+            "reach": 95000,
+            "engagement": 6100,
+            "conversions": 260
+        },
+        {
+            "name": "Jun",
+            "reach": 125000,
+            "engagement": 8200,
+            "conversions": 340
+        }
+    ],
+    "channels": [
+        {
+            "name": "Instagram",
+            "value": 45000
+        },
+        {
+            "name": "YouTube",
+            "value": 32000
+        },
+        {
+            "name": "TikTok",
+            "value": 28000
+        },
+        {
+            "name": "Twitter",
+            "value": 15000
+        }
+    ]
+}

@@ -1,0 +1,115 @@
+.card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    text-align: center;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Image / Placeholder */
+.imageWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-md);
+}
+
+.image {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 2px solid var(--color-border-light);
+}
+
+.placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-full);
+    background: rgba(207, 157, 123, 0.08);
+    border: 2px dashed var(--color-border-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+}
+
+/* Name & Handle */
+.name {
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: 2px;
+}
+
+.handle {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.categoryBadge {
+    display: inline-block;
+    padding: 2px var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: var(--font-weight-semibold);
+    background: var(--color-jet);
+    color: var(--color-brass);
+    margin-bottom: var(--space-sm);
+}
+
+.budgetTag {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-caption);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-md);
+}
+
+.withinBudget {
+    background: rgba(207, 157, 123, 0.15);
+    color: var(--color-brass);
+}
+
+.overBudget {
+    background: rgba(114, 75, 57, 0.2);
+    color: var(--color-coffee);
+}
+
+.metrics {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+.metric {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-caption);
+    color: var(--color-text-secondary);
+}
+
+.metricValue {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.niche {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-light-gray);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+    border-radius: var(--radius-sm);
+}

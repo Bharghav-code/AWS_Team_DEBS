@@ -1,0 +1,25 @@
+{
+    "adaptations": [
+        {
+            "id": "adapt-001",
+            "originalContent": "Get fit this summer with our protein shakes!",
+            "adaptedContent": "Fique em forma neste verão com nossos shakes de proteína! 💪🏖️",
+            "market": "brazil",
+            "language": "pt-BR"
+        },
+        {
+            "id": "adapt-002",
+            "originalContent": "Try our new workout routine today!",
+            "adaptedContent": "आज ही हमारी नई वर्कआउट रूटीन ट्राई करें! 🏋️‍♀️",
+            "market": "india",
+            "language": "hi-IN"
+        },
+        {
+            "id": "adapt-003",
+            "originalContent": "Discover the best street food in your city!",
+            "adaptedContent": "¡Descubre la mejor comida callejera en tu ciudad! 🌮🔥",
+            "market": "mexico",
+            "language": "es-MX"
+        }
+    ]
+}

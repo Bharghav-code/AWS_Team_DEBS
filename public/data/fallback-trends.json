@@ -1,0 +1,58 @@
+{
+    "trends": [
+        {
+            "id": "verao-fitness",
+            "name": "#VerãoFitness Challenge",
+            "badge": "Fitness Trend",
+            "alignmentPercentage": 92,
+            "timing": "Hot in São Paulo • 24h peak window",
+            "category": "Fitness",
+            "market": "brazil"
+        },
+        {
+            "id": "diwali-fashion",
+            "name": "#DiwaliGlam Collection",
+            "badge": "Fashion Trend",
+            "alignmentPercentage": 88,
+            "timing": "Trending in Mumbai • 48h peak",
+            "category": "Fashion",
+            "market": "india"
+        },
+        {
+            "id": "street-food-mx",
+            "name": "#SaborCallejero Discovery",
+            "badge": "Food Trend",
+            "alignmentPercentage": 95,
+            "timing": "Viral in Mexico City • 12h peak",
+            "category": "Food",
+            "market": "mexico"
+        },
+        {
+            "id": "tech-unboxing",
+            "name": "#TechUnboxing2024",
+            "badge": "Technology Trend",
+            "alignmentPercentage": 78,
+            "timing": "Growing in Jakarta • 72h window",
+            "category": "Technology",
+            "market": "indonesia"
+        },
+        {
+            "id": "yoga-wellness",
+            "name": "#YogaEveryday Movement",
+            "badge": "Health Trend",
+            "alignmentPercentage": 91,
+            "timing": "Surging in Bangalore • 36h peak",
+            "category": "Health",
+            "market": "india"
+        },
+        {
+            "id": "beach-workout",
+            "name": "#BeachWorkout Series",
+            "badge": "Fitness Trend",
+            "alignmentPercentage": 85,
+            "timing": "Hot in Rio • 24h peak window",
+            "category": "Fitness",
+            "market": "brazil"
+        }
+    ]
+}
