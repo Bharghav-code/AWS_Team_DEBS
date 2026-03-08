@@ -1,0 +1,1 @@
+aws cognito-idp create-user-pool-client --user-pool-id ap-south-1_OiSWWXfmp --client-name virale-app-nosecret --explicit-auth-flows ALLOW_USER_PASSWORD_AUTH ALLOW_REFRESH_TOKEN_AUTH --no-generate-secret --region ap-south-1

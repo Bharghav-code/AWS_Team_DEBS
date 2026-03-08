@@ -1,0 +1,297 @@
+service: virale-backend
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: ap-south-1
+  stage: ${opt:stage, 'v1'}
+  memorySize: 256
+  timeout: 30
+  environment:
+    REGION: ${self:provider.region}
+    USERS_TABLE: ${self:custom.usersTable}
+    CAMPAIGNS_TABLE: ${self:custom.campaignsTable}
+    TRENDS_TABLE: ${self:custom.trendsTable}
+    INFLUENCERS_TABLE: ${self:custom.influencersTable}
+    ANALYTICS_TABLE: ${self:custom.analyticsTable}
+    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID, ''}
+    COGNITO_CLIENT_ID: ${env:COGNITO_CLIENT_ID, ''}
+    BEDROCK_REGION: us-east-1
+    BEDROCK_MODEL_ID: "us.amazon.nova-lite-v1:0"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Query
+            - dynamodb:Scan
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.usersTable}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.usersTable}/index/*
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.campaignsTable}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.campaignsTable}/index/*
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.trendsTable}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.trendsTable}/index/*
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.influencersTable}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.influencersTable}/index/*
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.analyticsTable}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.analyticsTable}/index/*
+        - Effect: Allow
+          Action:
+            - bedrock:InvokeModel
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource: arn:aws:logs:${self:provider.region}:*:*
+
+custom:
+  usersTable: virale-users
+  campaignsTable: virale-campaigns
+  trendsTable: virale-trends
+  influencersTable: virale-influencers
+  analyticsTable: virale-analytics
+
+layers:
+  shared:
+    path: lambda/shared-layer
+    name: virale-shared-${self:provider.stage}
+    description: Shared utilities (response builder, DB helpers, cache)
+    compatibleRuntimes:
+      - python3.12
+
+package:
+  individually: false
+  patterns:
+    - "lambda/**"
+    - "!lambda/shared-layer/**"
+    - "!scripts/**"
+    - "!node_modules/**"
+    - "!package*.json"
+
+functions:
+  auth:
+    handler: lambda/virale_auth/lambda_function.lambda_handler
+    layers:
+      - { Ref: SharedLambdaLayer }
+    events:
+      - http:
+          path: auth/{proxy+}
+          method: ANY
+          cors: true
+
+  campaigns:
+    handler: lambda/virale_campaigns/lambda_function.lambda_handler
+    layers:
+      - { Ref: SharedLambdaLayer }
+    events:
+      - http:
+          path: campaigns
+          method: ANY
+          cors: true
+      - http:
+          path: campaigns/{id}
+          method: ANY
+          cors: true
+
+  trends:
+    handler: lambda/virale_trends/lambda_function.lambda_handler
+    layers:
+      - { Ref: SharedLambdaLayer }
+    events:
+      - http:
+          path: trends
+          method: ANY
+          cors: true
+      - http:
+          path: trends/{id}
+          method: ANY
+          cors: true
+
+  influencers:
+    handler: lambda/virale_influencers/lambda_function.lambda_handler
+    layers:
+      - { Ref: SharedLambdaLayer }
+    events:
+      - http:
+          path: influencers
+          method: ANY
+          cors: true
+      - http:
+          path: influencers/{id}
+          method: ANY
+          cors: true
+
+  content:
+    handler: lambda/virale_content/lambda_function.lambda_handler
+    memorySize: 512
+    timeout: 60
+    layers:
+      - { Ref: SharedLambdaLayer }
+    events:
+      - http:
+          path: content/adapt
+          method: POST
+          cors: true
+      - http:
+          path: content/{id}
+          method: GET
+          cors: true
+
+  analytics:
+    handler: lambda/virale_analytics/lambda_function.lambda_handler
+    layers:
+      - { Ref: SharedLambdaLayer }
+    events:
+      - http:
+          path: analytics
+          method: GET
+          cors: true
+      - http:
+          path: analytics/export
+          method: POST
+          cors: true
+      - http:
+          path: analytics/{id}
+          method: GET
+          cors: true
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.usersTable}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: email-index
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    CampaignsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.campaignsTable}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: campaignId
+            AttributeType: S
+          - AttributeName: status
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: campaignId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: status-index
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: status
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    TrendsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.trendsTable}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: state
+            AttributeType: S
+          - AttributeName: trendId
+            AttributeType: S
+          - AttributeName: category
+            AttributeType: S
+          - AttributeName: alignmentScore
+            AttributeType: "N"
+        KeySchema:
+          - AttributeName: state
+            KeyType: HASH
+          - AttributeName: trendId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: category-index
+            KeySchema:
+              - AttributeName: category
+                KeyType: HASH
+              - AttributeName: alignmentScore
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    InfluencersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.influencersTable}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: state
+            AttributeType: S
+          - AttributeName: influencerId
+            AttributeType: S
+          - AttributeName: cost
+            AttributeType: "N"
+          - AttributeName: niche
+            AttributeType: S
+        KeySchema:
+          - AttributeName: state
+            KeyType: HASH
+          - AttributeName: influencerId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: cost-index
+            KeySchema:
+              - AttributeName: state
+                KeyType: HASH
+              - AttributeName: cost
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: niche-index
+            KeySchema:
+              - AttributeName: niche
+                KeyType: HASH
+              - AttributeName: cost
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    AnalyticsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.analyticsTable}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: campaignId
+            AttributeType: S
+          - AttributeName: date
+            AttributeType: S
+        KeySchema:
+          - AttributeName: campaignId
+            KeyType: HASH
+          - AttributeName: date
+            KeyType: RANGE

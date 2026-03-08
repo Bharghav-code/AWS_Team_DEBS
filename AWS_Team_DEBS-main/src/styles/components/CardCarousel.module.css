@@ -1,0 +1,125 @@
+.container {
+    width: 100%;
+    padding: var(--space-xl) 0;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+/* Viewport wrapping the 3D stage and nav buttons */
+.viewport {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 340px;
+}
+
+/* 3D Stage */
+.stage {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+}
+
+/* Each card */
+.card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    transition:
+        transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.5s ease,
+        filter 0.5s ease;
+    will-change: transform, opacity;
+}
+
+.cardActive {
+    cursor: default;
+}
+
+/* Nav Buttons */
+.navBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--color-jungle-green);
+    border: 1px solid var(--color-border-light);
+    color: var(--color-brass);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition-base), box-shadow var(--transition-base);
+    box-shadow: var(--shadow-md);
+    padding: 0;
+}
+
+.navBtn:hover {
+    background: var(--color-jet);
+    box-shadow: var(--shadow-lg);
+}
+
+.navPrev {
+    left: 0;
+}
+
+.navNext {
+    right: 0;
+}
+
+/* Dots */
+.dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    background: var(--color-jet);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background var(--transition-base), transform var(--transition-base);
+}
+
+.dot:hover {
+    background: var(--color-coffee);
+    transform: scale(1.2);
+}
+
+.dotActive {
+    background: var(--color-brass);
+    transform: scale(1.3);
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    .stage {
+        width: 260px;
+        height: 280px;
+    }
+
+    .card {
+        transform: none !important;
+    }
+
+    .navBtn {
+        width: 32px;
+        height: 32px;
+    }
+}
